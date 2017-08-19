@@ -1,0 +1,15 @@
+Assume you have the following:
+1. Mac OS X
+2. path to python 2.7
+3. virtualenv installed
+4. mysql server installed with username: root and no password
+
+To use the software:
+1. make sure your mysql is running
+2. create a virtual environment: virtualenv venv -p <path to python 2.7>
+3. go to <path to stock_portfolio> and type "python manage.py makemigrations portfolio"
+4. go to <path to stock_portfolio> and type "python manage.py migrate"
+5. go to <path to stock_portfolio> and type "python manage.py createsuperuser" and enter to following: username, email, and password. Make sure you remember your username and password. You will need username and password to login to the website
+6. go to <path to stock_portfolio> and type "python manage.py runserver"
+7. open chrome browser and type in localhost:8000 and enter username and password
+8. Now you should be able to use the website.

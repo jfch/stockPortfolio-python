@@ -1,0 +1,222 @@
+{% extends "portfolio/base.html" %}
+{% load static %}
+{% block content %}
+
+<body>
+
+<div class="wrapper">
+    <div class="sidebar" data-color="purple" data-image="{% static 'portfolio/img/sidebar-5.jpg' %}">
+
+        <!--
+
+            Tip 1: you can change the color of the sidebar using: data-color="blue | azure | green | orange | red | purple"
+            Tip 2: you can also add an image using data-image tag
+
+        -->
+
+        <div class="sidebar-wrapper">
+            <div class="logo">
+                <a class="simple-text">
+                    Stock Portfolio
+                </a>
+            </div>
+
+            <ul class="nav">
+                <li class="inactive">
+                    <a href="/portfolio">
+                        <i class="pe-7s-monitor"></i>
+                        <p>Go Back</p>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="main-panel">
+        <nav class="navbar navbar-default navbar-fixed">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand">Stock Portfolio</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="/portfolio/logout">
+                                Log out
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="header"></div>
+                        <div class="content">
+                            <table id="stockTable" align="center">
+                            <thead>
+                            <tr>
+                                <th>Sticker</th>
+                                <th>Latest Price</th>
+                                <th>Holding Value</th>
+                                <th>Holding Ratio</th>
+                                <th>Exchange</th>
+                                <th>Company Name</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                            </tr>
+                            </tbody>
+                        </table>
+                        </div>
+                        <div class="footer">
+                            <hr>
+                        </div>
+                    </div>
+
+                </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="header"></div>
+                        <div class="content">
+                            <div id="portfolio_holding_ratio" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+                        </div>
+                        <div class="footer">
+                            <hr>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="header"></div>
+                        <div class="content">
+                            <div class="canvas holder" width="300" height="200">
+                                <canvas id="myChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="footer">
+                            <hr>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% include "portfolio/includes/footer.html" %}
+    </div>
+</div>
+<input type="hidden" id="resultData" value="{{ result }}">
+</body>
+{% include "portfolio/includes/requiredscripts.html" %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+
+<script language="javascript">
+    var result = document.getElementById('resultData').value;
+    result = JSON.parse(result);
+//    debugger;
+    var len = result.length;
+    var his = result[len - 1].history;
+    his.reverse();
+    var labels = [];
+    var datas = [];
+    for (var i = 0; i < his.length; i++) {
+        var key = Object.keys(his[i])[0];
+        labels.push(key);
+        var val = his[i][key].toString();
+        datas.push(val);
+    }
+    var ctx = document.getElementById("myChart");
+    var myLineChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: "History",
+                    data: datas
+                }
+            ]
+        }
+    });
+
+    var tableRef = document.getElementById('stockTable').getElementsByTagName('tbody')[0];
+    var pieDatas = [];
+
+    for (i = 0 ;i < result.length - 1; i++) {
+        // Insert a row in the table at row index 0
+        var newRow = tableRef.insertRow(i);
+        var curVal = result[i];
+
+        // Insert a cell in the row at index 0
+        var newCell = newRow.insertCell(0);
+        // Append a text node to the cell
+        var newText = document.createTextNode(curVal.sticker);
+        newCell.appendChild(newText);
+
+        newCell = newRow.insertCell(1);
+        newText = document.createTextNode(curVal.price);
+        newCell.appendChild(newText);
+
+        newCell = newRow.insertCell(2);
+        newText = document.createTextNode(curVal.aloc_amt);
+        newCell.appendChild(newText);
+
+        newCell = newRow.insertCell(3);
+        newText = document.createTextNode(curVal.aloc_pct);
+        newCell.appendChild(newText);
+
+        newCell = newRow.insertCell(4);
+        newText = document.createTextNode(curVal.exchange);
+        newCell.appendChild(newText);
+
+        newCell = newRow.insertCell(5);
+        newText = document.createTextNode(curVal.name);
+        newCell.appendChild(newText);
+        if (i === 0) {
+            var pieData = {name: curVal.name, y: parseFloat(curVal.aloc_pct), sliced: true, selected: true};
+        } else {
+            var pieData = {name: curVal.name, y: parseFloat(curVal.aloc_pct)};
+        }
+        pieDatas.push(pieData);
+    }
+
+    Highcharts.chart('portfolio_holding_ratio', {
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Portfolio Holding Ratio'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+                        showInLegend: true
+                    }
+                },
+                series: [{
+                    name: 'stock',
+                    colorByPoint: true,
+                    data: pieDatas
+                }]
+            });
+</script>
+
+
+{% endblock %}

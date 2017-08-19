@@ -1,0 +1,246 @@
+{% extends "portfolio/base.html" %}
+{% load static %}
+{% block content %}
+
+<body>
+
+<div class="wrapper">
+    <div class="sidebar" data-color="purple" data-image="{% static 'portfolio/img/sidebar-5.jpg' %}">
+
+        <!--
+
+            Tip 1: you can change the color of the sidebar using: data-color="blue | azure | green | orange | red | purple"
+            Tip 2: you can also add an image using data-image tag
+
+        -->
+
+        <div class="sidebar-wrapper">
+            <div class="logo">
+                <a class="simple-text">
+                    Sensor Network
+                </a>
+            </div>
+
+            <ul class="nav">
+                <li class="inactive">
+                    <a href="/app">
+                        <i class="pe-7s-monitor"></i>
+                        <p>Sensors Monitor</p>
+                    </a>
+                </li>
+                <li class="inactive">
+                    <a href="/app/deployment">
+                        <i class="pe-7s-pin"></i>
+                        <p>Deployment</p>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="#">
+                        <i class="pe-7s-graph1"></i>
+                        <p>History</p>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="main-panel">
+        <nav class="navbar navbar-default navbar-fixed">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand">Sensor Cloud Security</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="/app/logout">
+                                Log out
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <form method="post" action="/app/history">
+                        {% csrf_token %}
+                        <div class="col-md-5">
+                            <div class="header"></div>
+                            <div class="content">
+                                From:
+                                <input type="date" id="date1" name="datefrom">
+                            </div>
+                            <div class="footer">
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="header"></div>
+                            <div class="content">
+                                To:
+                                <input type="date" id="date2" name="dateto">
+                            </div>
+                            <div class="footer">
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="header"></div>
+                            <div class="content">
+                                <input type="submit">
+                            </div>
+                            <div class="footer">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                {% if summary %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="header"></div>
+                        <div class="content">
+                            <div id="container_decision"
+                                 style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+                        </div>
+                        <div class="footer">
+                            <hr>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="header"></div>
+                        <div class="content">
+                            <div id="container_naive"
+                                 style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+                        </div>
+                        <div class="footer">
+                            <hr>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% include "portfolio/includes/footer.html" %}
+    </div>
+</div>
+</body>
+<input type="hidden" id="summaryData" value="{{ summary }}">
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+<!--<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>-->
+
+{% include "portfolio/includes/requiredscripts.html" %}
+
+<script>
+    if ($('#date1')[0].type != 'date') {
+        $('#date1').datepicker();
+    }
+    if ($('#date2')[0].type != 'date') {
+        $('#date2').datepicker();
+    }
+    $(document).ready(function () {
+        var summaryData = document.getElementById('summaryData').value;
+        if (summaryData != null && summaryData.length > 0) {
+            summaryData = JSON.parse(summaryData);
+            // Build the chart
+            Highcharts.chart('container_decision', {
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Decision-Tree'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+                        showInLegend: true
+                    }
+                },
+                series: [{
+                    name: 'Sensors',
+                    colorByPoint: true,
+                    data: [{
+                        name: 'Normal',
+                        y: summaryData["decision_tree"].normal,
+                        sliced: true,
+                        selected: true
+                    }, {
+                        name: 'Blackhole Attacks',
+                        y: summaryData["decision_tree"].blackhole
+                    }, {
+                        name: 'Scheduling Attacks',
+                        y: summaryData["decision_tree"].scheduling
+                    }, {
+                        name: 'Sybil Attacks',
+                        y: summaryData["decision_tree"].sybil
+                    }, {
+                        name: 'Sinkhole Attacks',
+                        y: summaryData["decision_tree"].sinkhole
+                    }]
+                }]
+            });
+            Highcharts.chart('container_naive', {
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Naive-Bayes'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+                        showInLegend: true
+                    }
+                },
+                series: [{
+                    name: 'Sensors',
+                    colorByPoint: true,
+                    data: [{
+                        name: 'Normal',
+                        y: summaryData["naive_bayes"].normal,
+                        sliced: true,
+                        selected: true
+                    }, {
+                        name: 'Blackhole Attacks',
+                        y: summaryData["naive_bayes"].blackhole
+                    }, {
+                        name: 'Scheduling Attacks',
+                        y: summaryData["naive_bayes"].scheduling
+                    }, {
+                        name: 'Sybil Attacks',
+                        y: summaryData["naive_bayes"].sybil
+                    }, {
+                        name: 'Sinkhole Attacks',
+                        y: summaryData["naive_bayes"].sinkhole
+                    }]
+                }]
+            });
+        }
+    });
+</script>
+
+{% endblock %}

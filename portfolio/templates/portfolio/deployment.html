@@ -1,0 +1,184 @@
+{% extends "portfolio/base.html" %}
+{% load static %}
+{% block content %}
+
+<body>
+
+<div class="wrapper">
+    <div class="sidebar" data-color="purple" data-image="{% static 'portfolio/img/sidebar-5.jpg' %}">
+
+        <!--
+
+            Tip 1: you can change the color of the sidebar using: data-color="blue | azure | green | orange | red | purple"
+            Tip 2: you can also add an image using data-image tag
+
+        -->
+
+        <div class="sidebar-wrapper">
+            <div class="logo">
+                <a class="simple-text">
+                    Sensor Network
+                </a>
+            </div>
+
+            <ul class="nav">
+                <li class="inactive">
+                    <a href="/app">
+                        <i class="pe-7s-monitor"></i>
+                        <p>Sensors Monitor</p>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="#">
+                        <i class="pe-7s-pin"></i>
+                        <p>Deployment</p>
+                    </a>
+                </li>
+                <li class="inactive">
+                    <a href="/app/history">
+                        <i class="pe-7s-graph1"></i>
+                        <p>History</p>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="main-panel">
+        <nav class="navbar navbar-default navbar-fixed">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand">Sensor Cloud Security</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="/app/logout">
+                                Log out
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card ">
+                            <div class="header"></div>
+                            <div class="content">
+                                Sensor Deployment
+                                <form method="post" action="/app/sensors">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label for="cluster-id">Cluster ID</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="cluster_id"
+                                                   id="cluster-id" placeholder="Cluster ID" required>
+                                            <span class="input-group-addon info"><span
+                                                    class="glyphicon glyphicon-asterisk"></span></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="latitude">Latitude</label>
+                                        <div class="input-group" data-validate="number">
+                                            <input type="text" class="form-control" name="latitude"
+                                                   id="latitude" placeholder="Latitude" required>
+                                            <span class="input-group-addon danger"><span
+                                                    class="glyphicon glyphicon-remove"></span></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="longitude">Longitude</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="longitude"
+                                                   id="longitude" placeholder="Longitude" required>
+                                            <span class="input-group-addon info"><span
+                                                    class="glyphicon glyphicon-asterisk"></span></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sensor-type">Sensor Type</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="sensor_type"
+                                                   id="sensor-type" placeholder="Sensor Type" required>
+                                            <span class="input-group-addon danger"><span
+                                                    class="glyphicon glyphicon-remove"></span></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="manufacture">Manufacture</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="manufacture"
+                                                   id="manufacture" placeholder="Manufacture" required>
+                                            <span class="input-group-addon danger"><span
+                                                    class="glyphicon glyphicon-remove"></span></span>
+                                        </div>
+                                    </div>
+
+
+                                    <button type="submit" class="btn btn-primary col-xs-12">Submit</button>
+                                </form>
+
+                            </div>
+                            <div class="footer">
+                                <!--<hr>-->
+                                <div class="row">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card ">
+                            <div class="header"></div>
+                            <div class="content">
+                                Cluster Deployment
+                                <form method="post" action="/app/clusters">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label for="operation">Operation</label>
+                                        <div class="input-group">
+                                            <select class="form-control" name="operation" id="operation"
+                                                    placeholder="Operation" required>
+                                                <option value="On">On</option>
+                                                <option value="Off">Off</option>
+                                            </select>
+                                            <span class="input-group-addon danger"><span
+                                                    class="glyphicon glyphicon-remove"></span></span>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary col-xs-12">Submit</button>
+                                </form>
+
+                            </div>
+                            <div class="footer">
+                                <!--<hr>-->
+                                <div class="row">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+        {% include "portfolio/includes/footer.html" %}
+    </div>
+</div>
+
+</body>
+{% include "portfolio/includes/requiredscripts.html" %}
+
+<script type="text/javascript">
+
+</script>
+
+{% endblock %}
+

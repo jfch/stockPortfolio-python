@@ -1,0 +1,106 @@
+.modal-footer {   border-top: 0px; }
+.scrollable-table {
+    border: 1px solid gray;
+    height: 300px;
+    overflow-y: auto;
+}
+
+.scrollable-table table {
+    border: 1px solid gray;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.scrollable-table td, .scrollable-table th {
+    border: 1px solid gray;
+    padding: 5px;
+}
+
+.scrollable-table tbody tr:hover {
+    background-color: lightblue !important;
+    cursor: pointer;
+}
+
+.scrollable-table tbody tr.warning {
+    background-color: lightsalmon;
+}
+
+.scrollable-table tbody tr.error {
+    background-color: lightcoral;
+}
+
+.card-cluster-header:hover {
+    background-color: lightblue;
+    cursor: pointer;
+}
+
+.card-cluster-content-footer-legend:hover {
+    background-color: lightblue;
+    cursor: pointer;
+}
+
+.pac-card {
+    margin: 10px 10px 0 0;
+    border-radius: 2px 0 0 2px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    outline: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    background-color: #fff;
+    font-family: Roboto;
+}
+
+#pac-container {
+    padding-bottom: 12px;
+    margin-right: 12px;
+}
+
+.pac-controls {
+    display: inline-block;
+    padding: 5px 11px;
+}
+
+.pac-controls label {
+    font-family: Roboto;
+    font-size: 13px;
+    font-weight: 300;
+}
+
+.pac-input {
+    background-color: #fff;
+    font-family: Roboto;
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 24px;
+    margin-top: 10px;
+    margin-left: 20px;
+    padding: 0 11px 0 13px;
+    text-overflow: ellipsis;
+    width: 400px;
+}
+
+.pac-input:focus {
+    border-color: #4d90fe;
+}
+
+.img-sensor-icon{
+    height: 20px;
+    width: 10px;
+}
+.img-cluster-icon{
+    height: 20px;
+    width: 20px;
+}
+.hacked_table{
+    border-collapse: collapse;
+    width: 100%;
+}
+.hacked_table, th{
+    height: 30%;
+}
+.hacked_table, th, td{
+    margin-top: 10px;
+    padding: 15px;
+    text-align: left;
+    border: 2px solid lightgray;
+}

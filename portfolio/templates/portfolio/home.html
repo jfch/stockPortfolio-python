@@ -1,0 +1,194 @@
+{% extends "portfolio/base.html" %}
+{% load static %}
+{% block content %}
+
+<body>
+
+<div class="wrapper">
+    <div class="sidebar" data-color="purple" data-image="{% static 'portfolio/img/sidebar-5.jpg' %}">
+
+        <!--
+
+            Tip 1: you can change the color of the sidebar using: data-color="blue | azure | green | orange | red | purple"
+            Tip 2: you can also add an image using data-image tag
+
+        -->
+
+        <div class="sidebar-wrapper">
+            <div class="logo">
+                <a class="simple-text">
+                    Stock Portfolio
+                </a>
+            </div>
+
+            <ul class="nav">
+                <li class="active">
+                    <a href="#">
+                        <i class="pe-7s-monitor"></i>
+                        <p>Finance Analysis Engine</p>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="main-panel">
+        <nav class="navbar navbar-default navbar-fixed">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand">Stock Portfolio</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="/portfolio/logout">
+                                Log out
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+
+        <div class="content">
+            <div class="container-fluid">
+                <form method="post" name="investment" action="/portfolio/result" onsubmit="return checkform()">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card ">
+                                <div class="header"></div>
+                                <div class="content">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <b>Allotment:</b>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input type="number" id="allotment" name="allotment" value="5000">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <p></p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <b>Strategies:</b>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input type="checkbox" id="ethical" name="ethical">
+                                            Ethical Investing
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input type="checkbox" id="growth" name="growth">
+                                            Growth Investing
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input type="checkbox" id="index" name="index">
+                                            Index Investing
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input type="checkbox" id="quality" name="quality">
+                                            Quality Investing
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input type="checkbox" id="value" name="value">
+                                            Value Investing
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <p></p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input type="submit">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="footer">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+        {% include "portfolio/includes/footer.html" %}
+    </div>
+</div>
+<input type="hidden" id="resultData" value="{{ result }}">
+</body>
+{% include "portfolio/includes/requiredscripts.html" %}
+<script language="javascript">
+    function checkform() {
+        var newCount = 0;
+        var allotment = document.investment.allotment.value;
+
+        if (document.investment.ethical.checked) {
+            newCount = newCount + 1
+        }
+
+        if (document.investment.growth.checked) {
+            newCount = newCount + 1
+        }
+
+        if (document.investment.index.checked) {
+            newCount = newCount + 1
+        }
+
+        if (document.investment.quality.checked) {
+            newCount = newCount + 1
+        }
+
+        if (document.investment.value.checked) {
+            newCount = newCount + 1
+        }
+        if (newCount <= 0 || newCount >= 3) {
+            bootbox.dialog({
+                title: "Error",
+                message: "Please pick one or two investment strategies",
+                buttons: {
+                    "Close": {
+                        label: "Close",
+                        className: "btn btn-primary"
+                    }
+                }
+            });
+            document.investment;
+            return false;
+        } else if (allotment < 5000) {
+            bootbox.dialog({
+                title: "Error",
+                message: "Please input at least 5000 or greater in allotment field",
+                buttons: {
+                    "Close": {
+                        label: "Close",
+                        className: "btn btn-primary"
+                    }
+                }
+            });
+            return false;
+        }
+    }
+</script>
+
+
+{% endblock %}
